@@ -1,3 +1,4 @@
+use dioxus::html::input;
 use dioxus::prelude::*;
 use dioxus_desktop::{Config, LogicalSize, WindowBuilder};
 use dioxus_bulma::prelude::{
@@ -30,6 +31,12 @@ fn App(cx: Scope) -> Element {
                         is_fullwidth: true,
                         onclick: click_me,
                         "Click Me"
+                    }
+                    input: {
+                        r#type: "checkbox",
+                        id: "checkbox",
+                        name: "checkbox",
+                        checked: true,
                     }
                 }
             }
