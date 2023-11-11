@@ -7,26 +7,22 @@ pub mod layout;
 
 pub mod prelude {
     pub use crate::{columns::*, components::*, elements::*, layout::*};
-    pub use crate::{get_bulma_cdn, get_bulma_css, get_bulma_ext_cdn, get_bulma_extjs_cdn, Colors, Sizes};
+    pub use crate::{get_bulma_css, get_bulma_ext, get_bulma_ext_js, Colors, Sizes};
 }
 
 /// include bulma with css content
 pub fn get_bulma_css() -> &'static str {
-    include_str!("./assets/bulma.min.css")
+    include_str!("./assets/bulma/bulma.min.css")
 }
 
-/// get bulma cdn url
-pub fn get_bulma_cdn() -> &'static str {
-    "https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css"
+pub fn get_bulma_ext() -> &'static str {
+    include_str!("./assets/bulma-extensions.min.css")
 }
 
-pub fn get_bulma_ext_cdn() -> &'static str {
-    "https://cdn.jsdelivr.net/npm/bulma-extensions@6.2.7/dist/css/bulma-extensions.min.css"
+pub fn get_bulma_ext_js() -> &'static str {
+    include_str!("./assets/bulma-extensions.min.js")
 }
 
-pub fn get_bulma_extjs_cdn() -> &'static str {
-    "https://cdn.jsdelivr.net/npm/bulma-extensions@6.2.7/dist/js/bulma-extensions.min.js"
-}
 
 #[derive(Clone, PartialEq)]
 pub enum Colors {
