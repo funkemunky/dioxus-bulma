@@ -16,11 +16,11 @@ pub fn get_bulma_css() -> &'static str {
 }
 
 pub fn get_bulma_ext() -> &'static str {
-    include_str!("./assets/bulma/bulma-extensions.min.css")
+    include_str!("./assets/bulma-extensions.min.css")
 }
 
 pub fn get_bulma_ext_js() -> &'static str {
-    include_str!("./assets/bulma/bulma-extensions.min.js")
+    include_str!("./assets/bulma-extensions.min.js")
 }
 
 
