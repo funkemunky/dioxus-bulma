@@ -1,5 +1,7 @@
 #![allow(non_snake_case)]
 
+use std::fmt::Display;
+
 pub mod columns;
 pub mod components;
 pub mod elements;
@@ -42,9 +44,9 @@ pub enum Colors {
     White,
 }
 
-impl ToString for Colors {
-    fn to_string(&self) -> String {
-        match self {
+impl Display for Colors {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let str = match self {
             Colors::Primary => "primary",
             Colors::Link => "link",
             Colors::Info => "info",
@@ -56,7 +58,8 @@ impl ToString for Colors {
             Colors::Light => "light",
             Colors::White => "white",
         }
-        .to_string()
+            .to_string();
+        write!(f, "{}", str)
     }
 }
 
@@ -69,15 +72,16 @@ pub enum Sizes {
     Large,
 }
 
-impl ToString for Sizes {
-    fn to_string(&self) -> String {
-        match self {
+impl Display for Sizes {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let str = match self {
             Sizes::Small => "small",
             Sizes::Normal => "normal",
             Sizes::Medium => "medium",
             Sizes::Large => "large",
         }
-        .to_string()
+            .to_string();
+        write!(f, "{}", str)
     }
 }
 
