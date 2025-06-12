@@ -1,48 +1,36 @@
 use dioxus::prelude::*;
 
-#[derive(Props)]
-pub struct CardProps<'a> {
-    #[props(default)]
-    header: Element<'a>,
+#[derive(Props, PartialEq, Clone)]
+pub struct CardProps {
+    header: Element,
 
-    #[props(default)]
-    content: Element<'a>,
+    content: Element,
 
-    #[props(default)]
-    image: Element<'a>,
+    image: Element,
 
-    #[props(default)]
-    footer: Element<'a>,
+    footer: Element,
 }
 
-pub fn Card<'a>(cx: Scope<'a, CardProps<'a>>) -> Element {
-    cx.render(rsx! {
+pub fn Card(props: CardProps) -> Element {
+    rsx! {
         div {
             class: "card",
-            cx.props.header.as_ref().and_then(|_| cx.render(rsx! {
-                header {
+            header {
                     class: "card-header",
-                    &cx.props.header
-                }
-            }))
-            cx.props.image.as_ref().and_then(|_| cx.render(rsx! {
-                div {
+                    {props.header}
+                },
+            div {
                     class: "card-header",
-                    &cx.props.image
-                }
-            }))
-            cx.props.content.as_ref().and_then(|_| cx.render(rsx! {
-                div {
+                    {props.image}
+            },
+            div {
                     class: "card-header",
-                    &cx.props.content
-                }
-            }))
-            cx.props.footer.as_ref().and_then(|_| cx.render(rsx! {
-                footer {
+                    {props.content}
+            },
+            footer {
                     class: "card-header",
-                    &cx.props.footer
-                }
-            }))
+                    {props.footer}
+            }
         }
-    })
+    }
 }

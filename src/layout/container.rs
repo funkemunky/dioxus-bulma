@@ -1,7 +1,7 @@
 use dioxus::prelude::*;
 
-#[derive(Props)]
-pub struct ContainerProps<'a> {
+#[derive(PartialEq, Props, Clone)]
+pub struct ContainerProps {
     #[props(default)]
     widescreen: bool,
 
@@ -17,29 +17,30 @@ pub struct ContainerProps<'a> {
     #[props(default)]
     fluid: bool,
 
-    children: Element<'a>,
+    children: Element,
 }
 
-pub fn Container<'a>(cx: Scope<'a, ContainerProps<'a>>) -> Element {
+pub fn Container(props: ContainerProps) -> Element {
 
-    let extra_class = if cx.props.widescreen {
+    let extra_class = if props.widescreen {
         "is-widescreen"
-    } else if cx.props.fullhd {
+    } else if props.fullhd {
         "is-fullhd"
-    } else if cx.props.max_desktop {
+    } else if props.max_desktop {
         "is-max-desktop"
-    } else if cx.props.max_widescreen {
+    } else if props.max_widescreen {
         "is-max-widescreen"
-    } else if cx.props.fluid {
+    } else if props.fluid {
         "is-fluid"
     } else {
         ""
     };
 
-    cx.render(rsx! {
+
+    rsx! {
         div {
             class: "container {extra_class}",
-            &cx.props.children
+            {props.children}
         }
-    })
+    }
 }

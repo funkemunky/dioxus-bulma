@@ -2,7 +2,7 @@ use dioxus::{events::MouseEvent, prelude::*};
 
 use crate::{Colors, Sizes};
 
-#[derive(PartialEq)]
+#[derive(PartialEq, Clone)]
 pub enum ButtonState {
     Normal,
     Hover,
@@ -19,10 +19,10 @@ impl Default for ButtonState {
     }
 }
 
-#[derive(Props)]
-pub struct ButtonProps<'a> {
+#[derive(Props, Clone, PartialEq)]
+pub struct ButtonProps {
     #[props(optional)]
-    r#type: Option<&'a str>,
+    r#type: Option<String>,
 
     #[props(optional)]
     color: Option<Colors>,
@@ -49,54 +49,54 @@ pub struct ButtonProps<'a> {
     is_fullwidth: bool,
 
     #[props(default)]
-    onclick: EventHandler<'a, MouseEvent>,
+    onclick: EventHandler<MouseEvent>,
 
     #[props(default)]
-    onmousedown: EventHandler<'a, MouseEvent>,
+    onmousedown: EventHandler<MouseEvent>,
 
     #[props(default)]
-    onmouseup: EventHandler<'a, MouseEvent>,
+    onmouseup: EventHandler<MouseEvent>,
 
 
-    children: Element<'a>,
+    children: Element,
 }
 
-pub fn Button<'a>(cx: Scope<'a, ButtonProps<'a>>) -> Element {
+pub fn Button<'a>(props: ButtonProps) -> Element {
     let mut class_name = "button".to_string();
 
-    if let Some(color) = &cx.props.color {
+    if let Some(color) = props.color {
         let color_name = color.to_string();
         class_name = format!("{class_name} is-{color_name}");
     }
 
-    if let Some(size) = &cx.props.size {
+    if let Some(size) = props.size {
         let size_name = size.to_string();
         class_name = format!("{class_name} is-{size_name}");
     }
 
-    if cx.props.is_light {
+    if props.is_light {
         class_name += " is-light";
     }
 
-    if cx.props.is_outlined {
+    if props.is_outlined {
         class_name += " is-outlined";
     }
 
-    if cx.props.is_inverted {
+    if props.is_inverted {
         class_name += " is-inverted";
     }
 
-    if cx.props.is_rounded {
+    if props.is_rounded {
         class_name += " is-rounded";
     }
 
-    if cx.props.is_fullwidth {
+    if props.is_fullwidth {
         class_name += " is-fullwidth";
     }
 
-    let state = &cx.props.state;
+    let state = props.state;
     let mut disabled = "false";
-    if *state != ButtonState::Normal {
+    if state != ButtonState::Normal {
         match state {
             ButtonState::Normal => {}
             ButtonState::Hover => {
@@ -120,30 +120,31 @@ pub fn Button<'a>(cx: Scope<'a, ButtonProps<'a>>) -> Element {
         }
     }
 
-    let mut button_type = "button";
-    if let Some(t) = cx.props.r#type {
-        button_type = t;
-    }
+    let button_type: String = if let Some(t) = props.r#type {
+       t
+    } else {
+        "button".to_string()
+    };
 
-    cx.render(rsx! {
+    rsx! {
         button {
             class: "{class_name}",
             r#type: "{button_type}",
             disabled: "{disabled}",
-            onclick: move |evt| cx.props.onclick.call(evt),
-            onmousedown: move |evt| cx.props.onmousedown.call(evt),
-            onmouseup: move |evt| cx.props.onmouseup.call(evt),
-            &cx.props.children
+            onclick: move |evt| props.onclick.call(evt),
+            onmousedown: move |evt| props.onmousedown.call(evt),
+            onmouseup: move |evt| props.onmouseup.call(evt),
+            {props.children}
         }
-    })
+    }
 }
 
-#[inline_props]
-pub fn Buttons<'a>(cx: Scope<'a>, children: Element<'a>) -> Element {
-    cx.render(rsx! {
+#[component]
+pub fn Buttons(children: Element) -> Element {
+    rsx! {
         div {
             class: "buttons",
-            children
+            {children}
         }
-    })
+    }
 }

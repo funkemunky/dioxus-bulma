@@ -1,9 +1,8 @@
 use dioxus::prelude::*;
-
 use crate::Colors;
 
-#[derive(Props)]
-pub struct NotificationProps<'a> {
+#[derive(Props, PartialEq, Clone)]
+pub struct NotificationProps {
     #[props(optional)]
     color: Option<Colors>,
 
@@ -13,42 +12,42 @@ pub struct NotificationProps<'a> {
     #[props(default)]
     is_deletable: bool,
 
-    children: Element<'a>,
+    children: Element,
 }
 
-pub fn Notification<'a>(cx: Scope<'a, NotificationProps<'a>>) -> Element {
-    let closed = use_state(&cx, || false);
-    if *closed.get() {
+pub fn Notification(props: NotificationProps) -> Option<Element> {
+    let mut closed = use_signal(|| false);
+    if *closed.read() {
         return None;
     }
 
     let mut class_name = "notification".to_string();
 
-    if let Some(color) = &cx.props.color {
+    if let Some(color) = props.color {
         let color_name = color.to_string();
         class_name = format!("{class_name} is-{color_name}");
     }
 
-    if cx.props.is_light {
+    if props.is_light {
         class_name += " is-light";
     }
 
-    if cx.props.is_deletable {
-        cx.render(rsx! {
+    if props.is_deletable {
+        Some(rsx! {
             div {
                 class: "{class_name}",
                 button {
                     class: "delete",
                     onclick: move |_| { closed.set(true); }
                 }
-                &cx.props.children
+                {props.children}
             }
         })
     } else {
-        cx.render(rsx! {
+        Some(rsx! {
             div {
                 class: "{class_name}",
-                &cx.props.children
+                {props.children}
             }
         })
     }

@@ -61,6 +61,7 @@ impl ToString for Colors {
 }
 
 #[derive(PartialEq)]
+#[derive(Clone)]
 pub enum Sizes {
     Small,
     Normal,

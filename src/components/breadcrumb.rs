@@ -2,7 +2,7 @@ use dioxus::prelude::*;
 
 use crate::Sizes;
 
-#[derive(Clone)]
+#[derive(Clone, PartialEq)]
 pub enum Separator {
     Arrow,
     Bullet,
@@ -21,8 +21,8 @@ impl ToString for Separator {
     }
 }
 
-#[derive(Props)]
-pub struct BreadcurmbProps<'a> {
+#[derive(Props, PartialEq, Clone)]
+pub struct BreadcurmbProps {
     #[props(default)]
     is_centered: bool,
     #[props(default)]
@@ -34,33 +34,33 @@ pub struct BreadcurmbProps<'a> {
     #[props(optional)]
     size: Option<Sizes>,
 
-    children: Element<'a>,
+    children: Element,
 }
 
-pub fn Breadcurmb<'a>(cx: Scope<'a, BreadcurmbProps<'a>>) -> Element {
+pub fn Breadcurmb(props: BreadcurmbProps) -> Element {
 
     let mut extra_class = String::new();
     
-    if cx.props.is_centered {
+    if props.is_centered {
         extra_class += " is-centered";
-    } else if cx.props.is_right {
+    } else if props.is_right {
         extra_class += " is-right";
     }
 
-    if cx.props.separator.is_some() {
-        let separator = cx.props.separator.as_ref().unwrap().to_string();
+    if props.separator.is_some() {
+        let separator = props.separator.as_ref().unwrap().to_string();
         extra_class += &format!(" has-{}-separator", separator);
     }
 
-    if cx.props.size.is_some() {
-        let size = cx.props.size.as_ref().unwrap().to_string();
+    if props.size.is_some() {
+        let size = props.size.as_ref().unwrap().to_string();
         extra_class += &format!(" is-{}", size);
     }
 
-    cx.render(rsx! {
+    rsx! {
         nav {
             class: "breadcrumb {extra_class}",
-            &cx.props.children
+            {props.children}
         }    
-    })
+    }
 }

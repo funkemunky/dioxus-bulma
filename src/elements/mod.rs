@@ -3,52 +3,50 @@ mod image;
 mod notification;
 mod progress;
 pub mod tag;
+use dioxus::prelude::*;
 
 pub use button::{Button, ButtonProps, ButtonState};
 pub use image::{Image, ImageProps};
 pub use notification::{Notification, NotificationProps};
 pub use progress::{Progress, ProgressProps};
 
-use dioxus::prelude::*;
-
-#[inline_props]
-pub fn Block<'a>(cx: Scope, children: Element<'a>) -> Element {
-    cx.render(rsx! {
+#[component]
+pub fn Block(children: Element) -> Element {
+    rsx! {
         div {
             class: "block",
-            children
+            {children}
         }
-    })
+    }
 }
 
-#[inline_props]
-pub fn Box<'a>(cx: Scope, children: Element<'a>) -> Element {
-    cx.render(rsx! {
+#[component]
+pub fn BoxElement(children: Element) -> Element {
+    rsx! {
         div {
             class: "box",
-            children
+            {children}
         }
-    })
+    }
 }
 
-#[derive(Props)]
-pub struct ContentProps<'a> {
-    #[props(optional)]
+#[derive(PartialEq, Props, Clone)]
+pub struct ContentProps {
     size: Option<crate::Sizes>,
 
-    children: Element<'a>,
+    children: Element,
 }
 
-pub fn Content<'a>(cx: Scope<'a, ContentProps<'a>>) -> Element {
-    let extra_class = if cx.props.size.is_some() {
-        cx.props.size.as_ref().unwrap().to_string()
+pub fn Content<'a>(props: ContentProps) -> Element {
+    let extra_class = if props.size.is_some() {
+        props.size.as_ref().unwrap().to_string()
     } else {
         String::new()
     };
-    cx.render(rsx! {
+    rsx! {
         div {
             class: "content {extra_class}",
-            &cx.props.children
+            {props.children}
         }
-    })
+    }
 }

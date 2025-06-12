@@ -2,8 +2,8 @@ use dioxus::{events::MouseEvent, prelude::*};
 
 use crate::{Colors, Sizes};
 
-#[derive(Props)]
-pub struct TagProps<'a> {
+#[derive(Props, PartialEq, Clone)]
+pub struct TagProps {
     #[props(optional)]
     color: Option<Colors>,
 
@@ -19,44 +19,44 @@ pub struct TagProps<'a> {
     #[props(default)]
     deletable: bool,
 
-    children: Element<'a>,
+    children: Element,
 }
 
-pub fn Tag<'a>(cx: Scope<'a, TagProps<'a>>) -> Element {
-    let visible = use_state(&cx, || true);
-    if !visible.get() {
+pub fn Tag<'a>(props: TagProps) -> Option<Element> {
+    let mut visible = use_signal(|| true);
+    if !*visible.read() {
         return None;
     }
 
     let mut extra_class = String::new();
 
-    if cx.props.color.is_some() {
-        extra_class += &format!(" is-{}", cx.props.color.as_ref().unwrap().to_string());
+    if props.color.is_some() {
+        extra_class += &format!(" is-{}", props.color.as_ref().unwrap().to_string());
     }
 
-    if cx.props.is_light {
+    if props.is_light {
         extra_class += " is-light";
     }
 
-    if cx.props.size.is_some() {
-        extra_class += &format!(" is-{}", cx.props.size.as_ref().unwrap().to_string());
+    if props.size.is_some() {
+        extra_class += &format!(" is-{}", props.size.as_ref().unwrap().to_string());
     }
 
-    if cx.props.is_rounded {
+    if props.is_rounded {
         extra_class += " is-rounded";
     }
 
-    if cx.props.deletable {
-        let delete_button_size = match cx.props.size.as_ref().unwrap_or(&Sizes::Normal) {
+    if props.deletable {
+        let delete_button_size = match props.size.as_ref().unwrap_or(&Sizes::Normal) {
             Sizes::Small => "small",
             Sizes::Normal => "small",
             Sizes::Medium => "normal",
             Sizes::Large => "medium",
         };
-        cx.render(rsx! {
+        Some(rsx! {
             span {
                 class: "tag {extra_class}",
-                &cx.props.children
+                {props.children},
                 button {
                     class: "delete is-{delete_button_size}",
                     onclick: move |_| {
@@ -66,17 +66,17 @@ pub fn Tag<'a>(cx: Scope<'a, TagProps<'a>>) -> Element {
             }
         })
     } else {
-        cx.render(rsx! {
+        Some(rsx! {
             span {
                 class: "tag {extra_class}",
-                &cx.props.children
+                {props.children}
             }
         })
     }
 }
 
-#[derive(Props)]
-pub struct TagLinkProps<'a> {
+#[derive(Props, PartialEq, Clone)]
+pub struct TagLinkProps {
     #[props(optional)]
     color: Option<Colors>,
 
@@ -93,47 +93,47 @@ pub struct TagLinkProps<'a> {
     deletable: bool,
 
     #[props(default)]
-    onclick: EventHandler<'a, MouseEvent>,
+    onclick: EventHandler<MouseEvent>,
 
-    children: Element<'a>,
+    children: Element,
 }
 
-pub fn TagLink<'a>(cx: Scope<'a, TagLinkProps<'a>>) -> Element {
-    let visible = use_state(&cx, || true);
-    if !visible.get() {
+pub fn TagLink<'a>(props: TagLinkProps) -> Option<Element> {
+    let mut visible = use_signal(|| true);
+    if !*visible.read() {
         return None;
     }
 
     let mut extra_class = String::new();
 
-    if cx.props.color.is_some() {
-        extra_class += &format!(" is-{}", cx.props.color.as_ref().unwrap().to_string());
+    if props.color.is_some() {
+        extra_class += &format!(" is-{}", props.color.as_ref().unwrap().to_string());
     }
 
-    if cx.props.is_light {
+    if props.is_light {
         extra_class += " is-light";
     }
 
-    if cx.props.size.is_some() {
-        extra_class += &format!(" is-{}", cx.props.size.as_ref().unwrap().to_string());
+    if props.size.is_some() {
+        extra_class += &format!(" is-{}", props.size.as_ref().unwrap().to_string());
     }
 
-    if cx.props.is_rounded {
+    if props.is_rounded {
         extra_class += " is-rounded";
     }
 
-    if cx.props.deletable {
-        let delete_button_size = match cx.props.size.as_ref().unwrap_or(&Sizes::Normal) {
+    if props.deletable {
+        let delete_button_size = match props.size.as_ref().unwrap_or(&Sizes::Normal) {
             Sizes::Small => "small",
             Sizes::Normal => "small",
             Sizes::Medium => "normal",
             Sizes::Large => "medium",
         };
-        cx.render(rsx! {
+        Some(rsx! {
             a {
                 class: "tag {extra_class}",
-                onclick: move |evt| cx.props.onclick.call(evt),
-                &cx.props.children
+                onclick: move |evt| props.onclick.call(evt),
+                {props.children},
                 button {
                     class: "delete is-{delete_button_size}",
                     onclick: move |_| {
@@ -143,30 +143,30 @@ pub fn TagLink<'a>(cx: Scope<'a, TagLinkProps<'a>>) -> Element {
             }
         })
     } else {
-        cx.render(rsx! {
+        Some(rsx! {
             a {
                 class: "tag {extra_class}",
-                onclick: move |evt| cx.props.onclick.call(evt),
-                &cx.props.children
+                onclick: move |evt| props.onclick.call(evt),
+                {props.children}
             }
         })
     }
 }
 
-#[derive(Props)]
-pub struct TagsProps<'a> {
+#[derive(Props, PartialEq, Clone)]
+pub struct TagsProps {
     #[props(default)]
     addons: bool,
 
-    children: Element<'a>,
+    children: Element,
 }
 
-pub fn Tags<'a>(cx: Scope<'a, TagsProps<'a>>) -> Element {
-    let extra_class = if cx.props.addons { " has-addons" } else { "" };
-    cx.render(rsx! {
+pub fn Tags(props: TagsProps) -> Element {
+    let extra_class = if props.addons { " has-addons" } else { "" };
+    rsx! {
         div {
             class: "tags {extra_class}",
-            &cx.props.children
+            {props.children}
         }
-    })
+    }
 }

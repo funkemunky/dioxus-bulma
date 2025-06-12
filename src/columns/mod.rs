@@ -1,7 +1,7 @@
 use dioxus::prelude::*;
 
-#[derive(Props)]
-pub struct ColumnsProps<'a> {
+#[derive(Props, PartialEq, Clone)]
+pub struct ColumnsProps {
     #[props(default)]
     is_mobile: bool,
 
@@ -23,52 +23,52 @@ pub struct ColumnsProps<'a> {
     // #[props(optional)]
     // custom_class: Option<String>,
 
-    children: Element<'a>,
+    children: Element,
 }
 
-pub fn Columns<'a>(cx: Scope<'a, ColumnsProps<'a>>) -> Element {
+pub fn Columns<'a>(props: ColumnsProps) -> Element {
     let mut class_name = "columns".to_string();
 
-    if cx.props.is_mobile {
+    if props.is_mobile {
         class_name += " is-mobile";
     }
 
-    if cx.props.is_gapless {
+    if props.is_gapless {
         class_name += " is-gapless";
     }
 
-    if cx.props.is_multiline {
+    if props.is_multiline {
         class_name += " is-multiline";
     }
 
-    if cx.props.is_centered {
+    if props.is_centered {
         class_name += " is-centered";
     }
 
-    if cx.props.is_vcentered {
+    if props.is_vcentered {
         class_name += " is-vcentered";
     }
 
-    if let Some(num) = cx.props.variable_gap {
+    if let Some(num) = props.variable_gap {
         if (0..=8).contains(&num) {
             class_name = format!("{class_name} is-variable is-{num}");
         }
     }
 
-    // if let Some(class) = &cx.props.custom_class {
+    // if let Some(class) = &props.custom_class {
     //     class_name += class;
     // }
 
-    cx.render(rsx! {
+    rsx! {
         div {
             class: "{class_name}",
-            &cx.props.children
+            {props.children}
         }
-    })
+    }
 }
 
-#[derive(Props)]
-pub struct ColumnProps<'a> {
+#[derive(Props, PartialEq, Clone)]
+pub struct ColumnProps {
     #[props(default)]
     is_narrow: bool,
 
@@ -81,36 +81,36 @@ pub struct ColumnProps<'a> {
     // #[props(optional)]
     // custom_class: Option<String>,
 
-    children: Element<'a>,
+    children: Element,
 }
 
-pub fn Column<'a>(cx: Scope<'a, ColumnProps<'a>>) -> Element {
+pub fn Column<'a>(props: ColumnProps) -> Element {
     let mut class_name = "column".to_string();
 
-    if cx.props.is_narrow {
+    if props.is_narrow {
         class_name += " is-narrow";
     }
 
-    if let Some(num) = cx.props.size {
+    if let Some(num) = props.size {
         if (0..12).contains(&num) {
             class_name = format!("{class_name} is-{num}");
         }
     }
 
-    if let Some(num) = cx.props.offset {
+    if let Some(num) = props.offset {
         if (0..12).contains(&num) {
             class_name = format!("{class_name} is-offset-{num}");
         }
     }
 
-    // if let Some(class) = &cx.props.custom_class {
+    // if let Some(class) = &props.custom_class {
     //     class_name += class;
     // }
 
-    cx.render(rsx! {
+    rsx! {
         div {
             class: "{class_name}",
-            &cx.props.children
+            {props.children}
         }
-    })
+    }
 }
